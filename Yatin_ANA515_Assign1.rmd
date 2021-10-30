@@ -1,0 +1,66 @@
+---
+title: "ANA 515 Assignment 1"
+author: "Yatin Pawar"
+date: "10/28/2021"
+output: 
+  html_document:
+    theme:
+      bootswatch: minty
+---
+
+```{r setup, include=FALSE}
+#Next line url is to get the data from GitHub to R Studio wd.
+url <- "https://raw.githubusercontent.com/fivethirtyeight/guns-data/master/full_data.csv"
+
+gun_deaths <- read.csv(url)
+
+#Need to install below libraries to run the functions within them.
+library(tidyverse)
+library(knitr)
+library(bslib)
+```
+
+
+```{r, include=FALSE}
+#Create a new dataset with the name of ‘youth’ from the dataset ‘gun_deaths’ that filters gun_deaths by age<=65
+youth <- gun_deaths %>%
+filter(age<= 65)
+
+old <- gun_deaths %>%
+  filter (age>65)
+
+na.omit(old)
+
+```
+
+```{r, include=FALSE}
+#summary of the youth dataset. 
+summary(youth)
+summary(old)
+```
+
+```{r, echo = FALSE}
+#This next chunk is inline code. Inline code puts the text with the output of the function in the document.
+```
+
+We have data about `r nrow(gun_deaths)` individuals killed by guns. Only `r nrow(old)` are older than 65. The distribution of the remainder is shown below:
+
+# Gun deaths by age
+```{r youth-dist, echo = FALSE}
+#Plot the distribution of the age variable from the youth dataset.
+youth %>% 
+  ggplot(aes(age)) + 
+  geom_freqpoly(binwidth = 1)
+```
+
+# Gun deaths by race
+```{r race-dist, echo=FALSE}
+#Plot the distribution of youth by race
+
+youth %>%
+  ggplot(aes(fct_infreq(race) %>% fct_rev())) +
+  geom_bar() +
+  coord_flip() +
+  labs(x = "Victim race")
+
+```
